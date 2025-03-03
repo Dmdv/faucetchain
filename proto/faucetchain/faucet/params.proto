@@ -11,5 +11,6 @@ message Params {
   option (amino.name) = "faucetchain/x/faucet/Params";
   option (gogoproto.equal) = true;
 
-  
+  uint64 maxPerRequest = 1;
+  uint64 maxPerAddress = 2;
 }
