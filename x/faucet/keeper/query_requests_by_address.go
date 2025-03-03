@@ -2,6 +2,7 @@ package keeper
 
 import (
 	"context"
+	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"faucetchain/x/faucet/types"
 
@@ -17,8 +18,14 @@ func (k Keeper) RequestsByAddress(goCtx context.Context, req *types.QueryRequest
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	// TODO: Process the query
-	_ = ctx
+	addr, err := sdk.AccAddressFromBech32(req.Address)
+	if err != nil {
+		return nil, sdkerrors.ErrInvalidAddress.Wrap(err.Error())
+	}
 
-	return &types.QueryRequestsByAddressResponse{}, nil
+	history := k.GetRequestHistory(ctx, addr)
+
+	return &types.QueryRequestsByAddressResponse{
+		Requests: history.Requests,
+	}, nil
 }
