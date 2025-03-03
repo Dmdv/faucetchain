@@ -1,4 +1,5 @@
 syntax = "proto3";
+
 package faucetchain.faucet;
 
 import "amino/amino.proto";
@@ -11,20 +12,32 @@ option go_package = "faucetchain/x/faucet/types";
 
 // Query defines the gRPC querier service.
 service Query {
+  
   // Parameters queries the parameters of the module.
-  rpc Params(QueryParamsRequest) returns (QueryParamsResponse) {
+  rpc Params (QueryParamsRequest) returns (QueryParamsResponse) {
     option (google.api.http).get = "/faucetchain/faucet/params";
+  
+  }
+  
+  // Queries a list of RequestsByAddress items.
+  rpc RequestsByAddress (QueryRequestsByAddressRequest) returns (QueryRequestsByAddressResponse) {
+    option (google.api.http).get = "/faucetchain/faucet/requests_by_address/{address}";
+  
   }
 }
-
 // QueryParamsRequest is request type for the Query/Params RPC method.
 message QueryParamsRequest {}
 
 // QueryParamsResponse is response type for the Query/Params RPC method.
 message QueryParamsResponse {
+  
   // params holds all the parameters of this module.
-  Params params = 1 [
-    (gogoproto.nullable) = false,
-    (amino.dont_omitempty) = true
-  ];
+  Params params = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
 }
+
+message QueryRequestsByAddressRequest {
+  string address = 1;
+}
+
+message QueryRequestsByAddressResponse {}
+
