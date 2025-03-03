@@ -8,6 +8,7 @@ package faucet
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -19,7 +20,8 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Msg_UpdateParams_FullMethodName = "/faucetchain.faucet.Msg/UpdateParams"
+	Msg_UpdateParams_FullMethodName  = "/faucetchain.faucet.Msg/UpdateParams"
+	Msg_RequestTokens_FullMethodName = "/faucetchain.faucet.Msg/RequestTokens"
 )
 
 // MsgClient is the client API for Msg service.
@@ -31,6 +33,7 @@ type MsgClient interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(ctx context.Context, in *MsgUpdateParams, opts ...grpc.CallOption) (*MsgUpdateParamsResponse, error)
+	RequestTokens(ctx context.Context, in *MsgRequestTokens, opts ...grpc.CallOption) (*MsgRequestTokensResponse, error)
 }
 
 type msgClient struct {
@@ -51,6 +54,16 @@ func (c *msgClient) UpdateParams(ctx context.Context, in *MsgUpdateParams, opts 
 	return out, nil
 }
 
+func (c *msgClient) RequestTokens(ctx context.Context, in *MsgRequestTokens, opts ...grpc.CallOption) (*MsgRequestTokensResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(MsgRequestTokensResponse)
+	err := c.cc.Invoke(ctx, Msg_RequestTokens_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MsgServer is the server API for Msg service.
 // All implementations must embed UnimplementedMsgServer
 // for forward compatibility.
@@ -60,6 +73,7 @@ type MsgServer interface {
 	// UpdateParams defines a (governance) operation for updating the module
 	// parameters. The authority defaults to the x/gov module account.
 	UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error)
+	RequestTokens(context.Context, *MsgRequestTokens) (*MsgRequestTokensResponse, error)
 	mustEmbedUnimplementedMsgServer()
 }
 
@@ -72,6 +86,9 @@ type UnimplementedMsgServer struct{}
 
 func (UnimplementedMsgServer) UpdateParams(context.Context, *MsgUpdateParams) (*MsgUpdateParamsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateParams not implemented")
+}
+func (UnimplementedMsgServer) RequestTokens(context.Context, *MsgRequestTokens) (*MsgRequestTokensResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RequestTokens not implemented")
 }
 func (UnimplementedMsgServer) mustEmbedUnimplementedMsgServer() {}
 func (UnimplementedMsgServer) testEmbeddedByValue()             {}
@@ -112,6 +129,24 @@ func _Msg_UpdateParams_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Msg_RequestTokens_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRequestTokens)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RequestTokens(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Msg_RequestTokens_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RequestTokens(ctx, req.(*MsgRequestTokens))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Msg_ServiceDesc is the grpc.ServiceDesc for Msg service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -122,6 +157,10 @@ var Msg_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateParams",
 			Handler:    _Msg_UpdateParams_Handler,
+		},
+		{
+			MethodName: "RequestTokens",
+			Handler:    _Msg_RequestTokens_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
