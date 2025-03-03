@@ -1,6 +1,7 @@
 package types
 
 import (
+	"fmt"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
@@ -20,18 +21,32 @@ func ParamKeyTable() paramtypes.KeyTable {
 }
 
 // NewParams creates a new Params instance
-func NewParams() Params {
-	return Params{}
+func NewParams(maxRequest, maxAddress uint64) Params {
+	return Params{
+		MaxPerRequest: maxRequest,
+		MaxPerAddress: maxAddress,
+	}
 }
 
 // DefaultParams returns a default set of parameters
 func DefaultParams() Params {
-	return NewParams()
+	return NewParams(DefaultMaxPerRequest, DefaultMaxPerAddress)
 }
 
 // ParamSetPairs get the params.ParamSet
-func (p *Params) ParamSetPairs() paramtypes.ParamSetPairs {
-	return paramtypes.ParamSetPairs{}
+func (p Params) ParamSetPairs() paramtypes.ParamSetPairs {
+	return paramtypes.ParamSetPairs{
+		paramtypes.NewParamSetPair(KeyMaxPerRequest, &p.MaxPerRequest, validateUint64),
+		paramtypes.NewParamSetPair(KeyMaxPerAddress, &p.MaxPerAddress, validateUint64),
+	}
+}
+
+func validateUint64(i interface{}) error {
+	_, ok := i.(uint64)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+	return nil
 }
 
 // Validate validates the set of params
