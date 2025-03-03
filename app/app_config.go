@@ -53,7 +53,10 @@ import (
 	ibcexported "github.com/cosmos/ibc-go/v8/modules/core/exported"
 	"google.golang.org/protobuf/types/known/durationpb"
 
+	faucetmodulev1 "faucetchain/api/faucetchain/faucet/module"
 	faucetchainmodulev1 "faucetchain/api/faucetchain/faucetchain/module"
+	_ "faucetchain/x/faucet/module" // import for side-effects
+	faucetmoduletypes "faucetchain/x/faucet/types"
 	_ "faucetchain/x/faucetchain/module" // import for side-effects
 	faucetchainmoduletypes "faucetchain/x/faucetchain/types"
 	// this line is used by starport scaffolding # stargate/app/moduleImport
@@ -94,6 +97,7 @@ var (
 		circuittypes.ModuleName,
 		// chain modules
 		faucetchainmoduletypes.ModuleName,
+		faucetmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/initGenesis
 	}
 
@@ -119,6 +123,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		faucetchainmoduletypes.ModuleName,
+		faucetmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/beginBlockers
 	}
 
@@ -138,6 +143,7 @@ var (
 		ibcfeetypes.ModuleName,
 		// chain modules
 		faucetchainmoduletypes.ModuleName,
+		faucetmoduletypes.ModuleName,
 		// this line is used by starport scaffolding # stargate/app/endBlockers
 	}
 
@@ -158,6 +164,7 @@ var (
 		{Account: ibctransfertypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner}},
 		{Account: ibcfeetypes.ModuleName},
 		{Account: icatypes.ModuleName},
+		{Account: faucetmoduletypes.ModuleName, Permissions: []string{authtypes.Minter, authtypes.Burner, authtypes.Staking}},
 		// this line is used by starport scaffolding # stargate/app/maccPerms
 	}
 
@@ -296,6 +303,10 @@ var (
 			{
 				Name:   faucetchainmoduletypes.ModuleName,
 				Config: appconfig.WrapAny(&faucetchainmodulev1.Module{}),
+			},
+			{
+				Name:   faucetmoduletypes.ModuleName,
+				Config: appconfig.WrapAny(&faucetmodulev1.Module{}),
 			},
 			// this line is used by starport scaffolding # stargate/app/moduleConfig
 		},

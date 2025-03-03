@@ -1,0 +1,17 @@
+syntax = "proto3";
+package faucetchain.faucet;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "faucetchain/faucet/params.proto";
+
+option go_package = "faucetchain/x/faucet/types";
+
+// GenesisState defines the faucet module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}
