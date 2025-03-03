@@ -162,6 +162,15 @@
               "amount": "10000"
             }
           ]
+        },
+        {
+          "address": "cosmos17s95c5jpc6x2l3edwh4dm8yhac68yru7cre47d",
+          "coins": [
+            {
+              "denom": "stake",
+              "amount": "100000000"
+            }
+          ]
         }
       ],
       "supply": [
