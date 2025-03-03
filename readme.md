@@ -1,6 +1,10 @@
 # faucetchain
 **faucetchain** is a blockchain built using Cosmos SDK and Tendermint and created with [Ignite CLI](https://ignite.com/cli).
 
+## Faucet module
+
+- cosmos17s95c5jpc6x2l3edwh4dm8yhac68yru7cre47d
+
 ## Get started
 
 ```
