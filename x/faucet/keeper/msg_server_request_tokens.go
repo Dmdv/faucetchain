@@ -46,7 +46,7 @@ func (k msgServer) RequestTokens(goCtx context.Context, msg *types.MsgRequestTok
 		return nil, errwrapper.Wrap(sdkerrors.ErrInsufficientFunds, err.Error())
 	}
 
-	// explicitly record the request in history
+	// record the request in history
 	newRequest := &types.Request{
 		Amount: msg.Amount,
 		Height: ctx.BlockHeight(),
@@ -54,10 +54,10 @@ func (k msgServer) RequestTokens(goCtx context.Context, msg *types.MsgRequestTok
 
 	history.Requests = append(history.Requests, newRequest)
 
-	// explicitly persist updated history
+	// persist updated history
 	k.SetRequestHistory(ctx, requester, history)
 
-	// explicitly emit event (bonus evaluation)
+	// emit event (bonus evaluation)
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent("RequestTokens",
 			sdk.NewAttribute("address", msg.Creator),
