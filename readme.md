@@ -1,55 +1,28 @@
-# faucetchain
-**faucetchain** is a blockchain built using Cosmos SDK and Tendermint and created with [Ignite CLI](https://ignite.com/cli).
+# Faucetchain
 
 ## Faucet module
 
 - cosmos17s95c5jpc6x2l3edwh4dm8yhac68yru7cre47d
 
-## Get started
+## Init accounts
 
 ```
-ignite chain serve
-```
+rm -rf ~/.faucetchaind
+./bin/faucetchaind init faucetchain --chain-id faucetchain
+./bin/faucetchaind keys add validator --keyring-backend test
+./bin/faucetchaind keys add faucet-account --keyring-backend test
 
-`serve` command installs dependencies, builds, initializes, and starts your blockchain in development.
+./bin/faucetchaind genesis add-genesis-account $(./bin/faucetchaind keys show validator -a --keyring-backend test) 1000000000stake
+./bin/faucetchaind genesis add-genesis-account $(./bin/faucetchaind keys show faucet-account -a --keyring-backend test) 1000000000stake
 
-### Configure
+./bin/faucetchaind genesis gentx validator 500000000stake --chain-id faucetchain --keyring-backend test
+./bin/faucetchaind genesis collect-gentxs
+./bin/faucetchaind genesis validate-genesis
 
-Your blockchain in development can be configured with `config.yml`. To learn more, see the [Ignite CLI docs](https://docs.ignite.com).
+# Edit app.toml explicitly to set minimum-gas-prices
+# [base]
+# minimum-gas-prices = "0.01stake"
 
-### Web Frontend
-
-Additionally, Ignite CLI offers both Vue and React options for frontend scaffolding:
-
-For a Vue frontend, use: `ignite scaffold vue`
-For a React frontend, use: `ignite scaffold react`
-These commands can be run within your scaffolded blockchain project. 
-
-
-For more information see the [monorepo for Ignite front-end development](https://github.com/ignite/web).
-
-## Release
-To release a new version of your blockchain, create and push a new tag with `v` prefix. A new draft release with the configured targets will be created.
+./bin/faucetchaind start
 
 ```
-git tag v0.1
-git push origin v0.1
-```
-
-After a draft release is created, make your final changes from the release page and publish it.
-
-### Install
-To install the latest version of your blockchain node's binary, execute the following command on your machine:
-
-```
-curl https://get.ignite.com/username/faucetchain@latest! | sudo bash
-```
-`username/faucetchain` should match the `username` and `repo_name` of the Github repository to which the source code was pushed. Learn more about [the install process](https://github.com/allinbits/starport-installer).
-
-## Learn more
-
-- [Ignite CLI](https://ignite.com/cli)
-- [Tutorials](https://docs.ignite.com/guide)
-- [Ignite CLI docs](https://docs.ignite.com)
-- [Cosmos SDK docs](https://docs.cosmos.network)
-- [Developer Chat](https://discord.gg/ignite)
