@@ -4,6 +4,14 @@ import (
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
+var (
+	KeyMaxPerRequest = []byte("MaxPerRequest")
+	KeyMaxPerAddress = []byte("MaxPerAddress")
+
+	DefaultMaxPerRequest uint64 = 1000
+	DefaultMaxPerAddress uint64 = 10000
+)
+
 var _ paramtypes.ParamSet = (*Params)(nil)
 
 // ParamKeyTable the param key table for launch module
