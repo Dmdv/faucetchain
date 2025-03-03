@@ -1,6 +1,7 @@
 package keeper
 
 import (
+	storetypes "cosmossdk.io/store/types"
 	"fmt"
 
 	"cosmossdk.io/core/store"
@@ -14,6 +15,7 @@ import (
 type (
 	Keeper struct {
 		cdc          codec.BinaryCodec
+		storeKey     storetypes.StoreKey
 		storeService store.KVStoreService
 		logger       log.Logger
 
